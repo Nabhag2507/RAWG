@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAWG Clone</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #151515;
+      color: white;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #1a1a1a;
+      border-radius: 8px;
+      padding: 20px 15px;
+      margin-bottom: 20px;
+    }
+
+    .search-bar {
+      background-color: #3a3a3a;
+      border: none;
+      border-radius: 25px;
+      color: white;
+      padding: 10px 20px;
+      width: 965px;
+    }
+
+    .dropDown{
+      border-radius: 8px;
+      background-color: #1f1f1f;
+      color: white;
+    }
+
+    .search-bar:focus {
+      outline: none;
+      box-shadow: none;
+      background-color: #4a4a4a;
+    }
+
+    .btn-custom {
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .nav-link {
+      color: white !important;
+      font-weight: 600;
+      margin-left: 15px;
+    }
+
+    .navbar-brand {
+      color: white !important;
+      font-weight: bold;
+      font-size: 20px;
+      letter-spacing: 2px;
+    }
+
+    .shortcut-box {
+      background: #2b2b2b;
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 12px;
+      margin-left: 6px;
+      color: #ccc;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background-color: #1a1a1a;
+      padding: 20px;
+      min-height: 100vh;
+      border-radius: 8px;
+    }
+
+    .sidebar h6 {
+      margin-top: 20px;
+      font-weight: bolder;
+      font-size: 24px;
+    }
+
+    .sidebar h6 a {
+      color: #fff;
+      text-decoration: none;
+      display: block;
+      font-size: 24px;
+      font-weight: bolder;
+      margin: 6px 0;
+    }
+
+    /* Larger titles for Home and Reviews in the sidebar */
+    .sidebar h2 {
+      margin-top: 8px;
+      font-weight: bolder;
+      font-size: 32px;
+    }
+
+    .sidebar h2 a {
+      color: #fff;
+      text-decoration: none;
+      display: block;
+      font-size: 32px;
+      font-weight: bolder;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      margin: 6px 0;
+      font-size: 16px;
+    }
+
+    .sidebar a:hover {
+      color: #fff;
+    }
+
+    /* Game cards */
+    .game-card {
+      background-color: #1f1f1f;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      transition: transform 0.2s;
+    }
+
+    .game-card:hover {
+      transform: scale(1.02);
+    }
+
+    .game-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .game-card .card-body {
+      padding: 10px;
+    }
+
+    .game-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .filters {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 75px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <div class="container-fluid navbar">
+    <div class="row align-items-center">
+      <!-- Logo -->
+      <div class="col-auto">
+        <span class="navbar-brand"><a href="homepage.html" class="text-decoration-none text-light">RAWG</a></span>
+      </div>
+
+      <!-- Rate games button -->
+      <div class="col-auto">
+        <button class="btn btn-light btn-sm btn-custom">🎯 Rate top games</button>
+      </div>
+
+      <!-- Search -->
+      <div class="col">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-search"></i>
+          <input class="search-bar" type="search" placeholder="&#128269 Search 892,360 games" aria-label="Search">
+        </div>
+      </div>
+
+      <!-- Right links -->
+      <div class="col-auto">
+        <a href="login.html" class="nav-link d-inline">LOG IN</a>
+        <a href="signup.html" class="nav-link d-inline">SIGN UP</a>
+        <a href="#" class="nav-link d-inline">API</a>
+        <a href="#" class="nav-link d-inline">...</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Layout -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-md-2 sidebar">
+        <h2 class="fw-bolder fs-1"><a href="#">Home</a></h2>
+        <h2 class="fw-bolder"><a href="review.html">Reviews</a></h2>
+
+        <h6><a href="#">New Releases</a></h6>
+        <a href="#">Last 30 days</a>
+        <a href="#">This week</a>
+        <a href="#">Next week</a>
+        <a href="#">Release calendar</a>
+
+        <h6><a href="#">Top</a></h6>
+        <a href="#">Best of the year</a>
+        <a href="#">Popular in 2024</a>
+        <a href="#">All time top 250</a>
+
+        <h6><a href="#">All Games</a></h6>
+        <a href="#">Browse</a>
+
+        <h6><a href="#">Platforms</a></h6>
+        <a href="#">PC</a>
+        <a href="#">PlayStation 4</a>
+        <a href="#">Xbox One</a>
+        <a href="#">Show all</a>
+
+        <h6><a href="#">Genres</a></h6>
+        <a href="#">Free Online Games</a>
+        <a href="#">Action</a>
+        <a href="#">Strategy</a>
+        <a href="#">Show all</a>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-md-10">
+        <div class="d-flex justify-content-between align-items-center filters">
+          <h2 class="section-title">New and trending</h2>
+        </div>
+        <select name="Order by" class="mb-4 p-2 dropDown">
+          <option selected>Order by : <span class="fw-bolder">Relevence</span></option>
+          <option value="">Date added</option>
+          <option value="">Name</option>
+          <option value="">Release date</option>
+          <option value="">Popularity</option>
+          <option value="">Average rating</option>
+        </select>
+
+        <select name="Platforms" class="mb-4 p-2 dropDown">
+          <option selected>Platforms</option>
+          <option>PlayStation</option>
+          <option>Xbox</option>
+          <option>iOS</option>
+          <option>Android</option>
+          <option>Apple Macintosh</option>
+          <option>Linux</option>
+          Nintendo
+        </select>
+
+        <!-- Game Grid -->
+        <div class="row">
+          <!-- Example Game Card -->
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="/rawg image.jpg" alt="Game">
+              <div class="card-body">
+                <div class="game-title fs-24">Vampire: The Masquerade - Bloodlines 2</div>
+                <i class="bi bi-windows"></i>
+                <small>⭐ 107</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">Death Stranding 2: On The Beach</p>
+                <small>⭐ 217</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">Hollow Knight: Silksong</p>
+                <small>⭐ 350</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="game-card">
+              <img src="https://placehold.co/300x150" alt="Game">
+              <div class="card-body">
+                <p class="game-title">The Alters</p>
+                <small>⭐ 140</small>
+              </div>
+            </div>
+          </div>
+          <!-- Add more cards as needed -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

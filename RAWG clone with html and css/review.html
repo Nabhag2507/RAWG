@@ -1,0 +1,912 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>review page</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #151515;
+      color: white;
+    }
+
+    /* Review card styles (new) */
+    .review-card {
+      background: #161616;
+      border-radius: 10px;
+      overflow: hidden;
+      color: #eaeaea;
+      display: flex;
+      flex-direction: column;
+      min-height: 260px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    .review-thumb {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.6);
+    }
+
+    .review-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .review-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 0;
+      padding-bottom: 8px;
+      position: relative;
+    }
+
+    .review-title::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 3px;
+      width: 46px;
+      background: #fff;
+      border-radius: 2px;
+    }
+
+    .review-emoji {
+      margin-left: 8px;
+      font-size: 20px;
+      vertical-align: middle;
+    }
+
+    .review-excerpt {
+      color: #bdbdbd;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    .review-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .review-author {
+      color: #cfcfcf;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .review-time {
+      display: block;
+      font-size: 11px;
+      color: #8f8f8f;
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    .votes {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .vote-btn {
+      background: transparent;
+      border: none;
+      color: #8f8f8f;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 6px;
+      transition: background .12s, color .12s;
+    }
+
+    .vote-btn:hover {
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+    }
+
+    .vote-btn.up {
+      color: #52b788;
+    }
+
+    /* green */
+    .vote-btn.down {
+      color: #ef6b6b;
+    }
+
+    /* red */
+    .vote-count {
+      font-weight: 700;
+      color: inherit;
+    }
+
+    /* Tabs animation + active styles */
+    .tabs {
+      display: flex;
+      gap: 24px;
+      margin-top: 6px;
+    }
+
+    .tabs a {
+      position: relative;
+      color: #aaa;
+      text-decoration: none;
+      padding-bottom: 8px;
+      font-weight: 600;
+      transition: color 180ms ease;
+    }
+
+    /* underline using pseudo element (animated scale) */
+    .tabs a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 3px;
+      width: 100%;
+      background: #fff;
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 220ms ease;
+      opacity: 0.95;
+    }
+
+    .tabs a:hover {
+      color: #fff;
+    }
+
+    .tabs a:hover::after {
+      transform: scaleX(1);
+    }
+
+    /* active tab: underline visible and brighter */
+    .tabs a.active {
+      color: #fff;
+    }
+
+    .tabs a.active::after {
+      transform: scaleX(1);
+    }
+
+    /* sidebar active link highlight */
+    .sidebar a.active,
+    .sidebar h2 a.active {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .sidebar a.active::after {
+      /* optional small indicator for sidebar links */
+      content: "";
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #1a1a1a;
+      border-radius: 8px;
+      padding: 20px 15px;
+      margin-bottom: 20px;
+    }
+
+    .search-bar {
+      background-color: #3a3a3a;
+      border: none;
+      border-radius: 25px;
+      color: white;
+      padding: 10px 20px;
+      width: 965px;
+    }
+
+    .search-bar:focus {
+      outline: none;
+      box-shadow: none;
+      background-color: #4a4a4a;
+    }
+
+    .btn-custom {
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .nav-link {
+      color: white !important;
+      font-weight: 600;
+      margin-left: 15px;
+    }
+
+    .navbar-brand {
+      color: white !important;
+      font-weight: bold;
+      font-size: 20px;
+      letter-spacing: 2px;
+    }
+
+    .shortcut-box {
+      background: #2b2b2b;
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 12px;
+      margin-left: 6px;
+      color: #ccc;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background-color: #1a1a1a;
+      padding: 20px;
+      min-height: 100vh;
+      border-radius: 8px;
+    }
+
+    .dropDown{
+      border-radius: 8px;
+      background-color: #1f1f1f;
+      color: white;
+    }
+
+    .sidebar h6 {
+      margin-top: 20px;
+      font-weight: bolder;
+      font-size: 24px;
+    }
+
+    .sidebar h6 a {
+      color: #fff;
+      text-decoration: none;
+      display: block;
+      font-size: 24px;
+      font-weight: bolder;
+      margin: 6px 0;
+    }
+
+    /* Larger titles for Home and Reviews in the sidebar */
+    .sidebar h2 {
+      margin-top: 8px;
+      font-weight: bolder;
+      font-size: 32px;
+    }
+
+    .sidebar h2 a {
+      color: #fff;
+      text-decoration: none;
+      display: block;
+      font-size: 32px;
+      font-weight: bolder;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      margin: 6px 0;
+      font-size: 16px;
+    }
+
+    .sidebar a:hover {
+      color: #fff;
+    }
+
+    /* Game cards */
+    .game-card {
+      background-color: #1f1f1f;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      transition: transform 0.2s;
+    }
+
+    .game-card:hover {
+      transform: scale(1.02);
+    }
+
+    .game-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .game-card .card-body {
+      padding: 10px;
+    }
+
+    .game-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .filters {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 75px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body data-page="reviews">
+  <!-- Navbar -->
+  <div class="container-fluid navbar">
+    <div class="row align-items-center">
+      <!-- Logo -->
+      <div class="col-auto">
+        <span class="navbar-brand"><a href="homepage.html" class="text-decoration-none text-light">RAWG</a></span>
+      </div>
+
+      <!-- Rate games button -->
+      <div class="col-auto">
+        <button class="btn btn-light btn-sm btn-custom">🎯 Rate top games</button>
+      </div>
+
+      <!-- Search -->
+      <div class="col">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-search"></i>
+          <input class="search-bar" type="search" placeholder="&#128269 Search 892,360 games" aria-label="Search">
+        </div>
+      </div>
+
+      <!-- Right links -->
+      <div class="col-auto">
+        <a href="login.html" class="nav-link d-inline">LOG IN</a>
+        <a href="signup.html" class="nav-link d-inline">SIGN UP</a>
+        <a href="#" class="nav-link d-inline">API</a>
+        <a href="#" class="nav-link d-inline">...</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Layout -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-md-2 sidebar">
+        <h2 class="fw-bolder fs-1"><a href="homepage.html" data-page="home">Home</a></h2>
+        <h2 class="fw-bolder"><a href="review.html" data-page="reviews">Reviews</a></h2>
+
+        <h6><a href="#">New Releases</a></h6>
+        <a href="#">Last 30 days</a>
+        <a href="#">This week</a>
+        <a href="#">Next week</a>
+        <a href="#">Release calendar</a>
+
+        <h6><a href="#">Top</a></h6>
+        <a href="#">Best of the year</a>
+        <a href="#">Popular in 2024</a>
+        <a href="#">All time top 250</a>
+
+        <h6><a href="#">All Games</a></h6>
+        <a href="#">Browse</a>
+
+        <h6><a href="#">Platforms</a></h6>
+        <a href="#">PC</a>
+        <a href="#">PlayStation 4</a>
+        <a href="#">Xbox One</a>
+        <a href="#">Show all</a>
+
+        <h6><a href="#">Genres</a></h6>
+        <a href="#">Free Online Games</a>
+        <a href="#">Action</a>
+        <a href="#">Strategy</a>
+        <a href="#">Show all</a>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-md-10">
+        <div class="d-flex justify-content-between align-items-center filters">
+          <h2 class="section-title">Reviews </h2>
+        </div>
+        <select name="Order by" class="mb-4 p-2 dropDown">
+          <option selected>Order by : <span class="fw-bolder">Relevence</span></option>
+          <option value="">Date added</option>
+          <option value="">Name</option>
+          <option value="">Release date</option>
+          <option value="">Popularity</option>
+          <option value="">Average rating</option>
+        </select>
+
+        <select name="Platforms" class="mb-4 p-2 dropDown">
+          <option selected>Platforms</option>
+          <option>PlayStation</option>
+          <option>Xbox</option>
+          <option>iOS</option>
+          <option>Android</option>
+          <option>Apple Macintosh</option>
+          <option>Linux</option>
+          Nintendo
+        </select>
+        <!-- Tabs: use ?tab=new or ?tab=popular in the URL to control active state, default = popular -->
+        <nav class="tabs" aria-label="reviews tabs">
+          <a href="#" class="tab-link" data-tab="popular">Popular</a>
+          <a href="#" class="tab-link" data-tab="new">New</a>
+        </nav>
+
+        <div class="cards row">
+          <!-- Converted review-style cards -->
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Disney's DuckTales 2 <span class="review-emoji">👍</span></h3>
+                <p class="review-excerpt">this game gave me anxiety at 11</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">_black_jack_</div>
+                    <div class="review-time">3 hours ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up" aria-label="upvote">👍 <span class="vote-count">0</span></button>
+                    <button class="vote-btn down" aria-label="downvote">👎 <span class="vote-count">0</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Vampire: The Masquerade - Bloodlines 2 <span class="review-emoji">🔥</span>
+                </h3>
+                <p class="review-excerpt">A tense, immersive RPG with great atmosphere.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">nightwalker</div>
+                    <div class="review-time">1 day ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">107</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">3</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Hollow Knight: Silksong <span class="review-emoji">⭐</span></h3>
+                <p class="review-excerpt">Beautiful metroidvania that nails combat and atmosphere.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">mothwing</div>
+                    <div class="review-time">2 days ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">350</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">8</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- duplicate or add more review-card blocks as needed -->
+          <!-- Additional 20 chaotic cards (non-redundant data, mixed column widths) -->
+          <div class="col-md-4 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/111827/ffffff?text=ChronoShift" alt="">
+              <div class="review-body">
+                <h3 class="review-title">ChronoShift: Riftbound <span class="review-emoji">🔁</span></h3>
+                <p class="review-excerpt">Time loops done right — frustrating and brilliant.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">chrono_j</div>
+                    <div class="review-time">5 minutes ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">12</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">1</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/0f172a/7dd3fc?text=Neon+Drift" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Neon Drift: Tokyo Nights <span class="review-emoji">🚗</span></h3>
+                <p class="review-excerpt">Speed, synth and sharp turns — pure neon chaos.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">neonracer</div>
+                    <div class="review-time">2 hours ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">99</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">4</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-12 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/900x300/064e3b/ffffff?text=Garden+of+Whispers" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Garden of Whispers <span class="review-emoji">🌿</span></h3>
+                <p class="review-excerpt">Quiet exploration with a surprisingly dark heart.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">greenthumb</div>
+                    <div class="review-time">1 day ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">7</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">0</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/0ea5a4/072f3a?text=Silent+Harbor" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Silent Harbor <span class="review-emoji">🌊</span></h3>
+                <p class="review-excerpt">Melancholic storytelling with great sound design.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">anchorless</div>
+                    <div class="review-time">3 days ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">45</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">2</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/1f2937/fb923c?text=Metalcore+Tactics" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Metalcore Tactics <span class="review-emoji">⚙️</span></h3>
+                <p class="review-excerpt">Hardcore strategy, unforgiving but rewarding.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">mechlord</div>
+                    <div class="review-time">6 hours ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">210</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">12</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/111827/eab308?text=Pixel+Noir" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Pixel Noir <span class="review-emoji">🕵️</span></h3>
+                <p class="review-excerpt">Minimal pixel art, maximum detective mood.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">noircat</div>
+                    <div class="review-time">8 days ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">5</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">0</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-12 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/900x300/0b1220/94a3b8?text=Starship+Janitor" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Starship Janitor <span class="review-emoji">🧹</span></h3>
+                <p class="review-excerpt">Oddball comedy with surprisingly deep lore.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">scrubpilot</div>
+                    <div class="review-time">12 minutes ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">3</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">0</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/6d28d9/fff1f2?text=Echoes+of+Elysium" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Echoes of Elysium <span class="review-emoji">✨</span></h3>
+                <p class="review-excerpt">A beautiful, melancholic journey through memory.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">elysian</div>
+                    <div class="review-time">4 hours ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">65</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">7</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/7c3aed/ffffff?text=Broken+Compass" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Broken Compass <span class="review-emoji">🧭</span></h3>
+                <p class="review-excerpt">Exploration turned into a puzzle of regret.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">lostandfound</div>
+                    <div class="review-time">2 days ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">20</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">1</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/0ea5a4/022c22?text=Arcane+Auction" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Arcane Auction <span class="review-emoji">🔮</span></h3>
+                <p class="review-excerpt">Item trading meets dark magic — addicting market loops.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">maga_mark</div>
+                    <div class="review-time">7 days ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">88</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">9</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-12 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/900x300/ff5c5c/1b1b1b?text=Turbo+Tale" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Turbo Tale: Alley Run <span class="review-emoji">🏃‍♂️</span></h3>
+                <p class="review-excerpt">Fast-paced street platformer with weird charm.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">alleycat</div>
+                    <div class="review-time">30 minutes ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">14</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">2</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/8b5cf6/ffffff?text=Harvest+Noise" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Harvest Noise <span class="review-emoji">🐷</span></h3>
+                <p class="review-excerpt">Lo-fi farming sim with hilarious NPCs.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">farmhand</div>
+                    <div class="review-time">9 hours ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">6</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">0</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/334155/ffffff?text=Glass+Skyline" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Glass Skyline <span class="review-emoji">🏙️</span></h3>
+                <p class="review-excerpt">Urban puzzles with gorgeous skyline vistas.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">skywalker</div>
+                    <div class="review-time">11 hours ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">27</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">3</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/0f172a/94a3b8?text=Rift+Riders" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Rift Riders <span class="review-emoji">🛶</span></h3>
+                <p class="review-excerpt">Co-op exploration with massive replay value.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">riftmaster</div>
+                    <div class="review-time">3 weeks ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">430</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">22</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/065f46/fff?text=Mossbound" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Mossbound <span class="review-emoji">🍄</span></h3>
+                <p class="review-excerpt">Short, sweet, and unexpectedly touching.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">fungusfan</div>
+                    <div class="review-time">16 minutes ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">1</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">0</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/ef4444/111827?text=Voltage+Vengeance" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Voltage Vengeance <span class="review-emoji">⚡</span></h3>
+                <p class="review-excerpt">Electrifying combat loop, tons of polish.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">ampblade</div>
+                    <div class="review-time">2 hours ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">300</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">5</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/f97316/1f2937?text=Paper+Kingdoms" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Paper Kingdoms <span class="review-emoji">📜</span></h3>
+                <p class="review-excerpt">Charming folding puzzles with personality.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">foldqueen</div>
+                    <div class="review-time">5 days ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">19</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">2</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/06b6d4/062024?text=Mirage+Market" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Mirage Market <span class="review-emoji">🛍️</span></h3>
+                <p class="review-excerpt">Bizarre vendor mechanics that actually work.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">merchant</div>
+                    <div class="review-time">6 days ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">9</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">1</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/92400e/fff?text=Copper+%26+Coal" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Copper &amp; Coal <span class="review-emoji">⛏️</span></h3>
+                <p class="review-excerpt">Resource management with real grit and charm.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">miner_mad</div>
+                    <div class="review-time">2 hours ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">33</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">4</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="review-card">
+              <img class="review-thumb" src="https://placehold.co/600x300/0ea5a4/001219?text=Silent+Signal" alt="">
+              <div class="review-body">
+                <h3 class="review-title">Silent Signal <span class="review-emoji">📻</span></h3>
+                <p class="review-excerpt">An eerie puzzle about listening to the past.</p>
+                <div class="review-meta">
+                  <div>
+                    <div class="review-author">staticvoid</div>
+                    <div class="review-time">13 minutes ago</div>
+                  </div>
+                  <div class="votes">
+                    <button class="vote-btn up">👍 <span class="vote-count">0</span></button>
+                    <button class="vote-btn down">👎 <span class="vote-count">0</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

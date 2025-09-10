@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>RAWG-style Card — image scroll on hover</title>
+    <style>
+        :root {
+            --card-w: 320px;
+            --media-h: 200px;
+            --bg: #0f1720;
+            --muted: rgba(255, 255, 255, 0.06);
+            --text: #e6eef8;
+            --accent: #fff;
+        }
+
+        /* container */
+        .game-card-medium {
+            width: var(--card-w);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            color: var(--text);
+        }
+
+        .game-card-medium__wrapper {
+            background: var(--bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(2, 6, 23, 0.6);
+            outline: none;
+            transition: transform .18s ease, box-shadow .18s ease;
+            position: relative;
+        }
+
+        .game-card-medium__wrapper:focus {
+            box-shadow: 0 12px 36px rgba(2, 6, 23, 0.9);
+        }
+
+        /* media / carousel */
+        .carousel {
+            position: relative;
+            height: var(--media-h);
+            background: #0b1216;
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            animation-name: slide;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            animation-play-state: paused;
+        }
+
+        .is-playing .carousel-track {
+            animation-play-state: running;
+        }
+
+        .carousel-track img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            flex: 0 0 100%;
+            display: block;
+        }
+
+        /* rounded corners on top */
+        .carousel img:first-child {
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        /* indicators (pills) */
+        .carousel-indicators {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 12px;
+            display: flex;
+            gap: 8px;
+            z-index: 30;
+            align-items: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .16s ease, transform .16s ease;
+        }
+
+        .game-card-medium__wrapper:hover .carousel-indicators,
+        .game-card-medium__wrapper:focus-within .carousel-indicators,
+        .is-playing .carousel-indicators {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .carousel-indicators .dot {
+            width: 28px;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .carousel-indicators .dot.active {
+            background: var(--accent);
+            width: 36px;
+        }
+
+        /* small platform badges overlay top-left */
+        .platforms-overlay {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            gap: 8px;
+            z-index: 30;
+            color: var(--text);
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        .platforms-overlay .plat {
+            background: rgba(0, 0, 0, 0.45);
+            padding: 6px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        /* title area */
+        .game-card-medium__info {
+            padding: 14px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.03), transparent);
+        }
+
+        .heading_4 {
+            font-size: 18px;
+            margin: 0 0 8px 0;
+            line-height: 1.1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .game-card-medium__info__name {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .rating {
+            background: var(--muted);
+            color: var(--accent);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        /* buttons row */
+        .game-card-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            align-items: center;
+        }
+
+        .game-card-button {
+            background: var(--muted);
+            border: 0;
+            color: var(--text);
+            padding: 6px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 0;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        /* extra panel (mimic RAWG expanded area) */
+        .card-extra {
+            background: #0b0f11;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            color: #cbd8e6;
+            transform: translateY(8px);
+            opacity: 0;
+            transition: transform .18s ease, opacity .18s ease;
+            display: grid;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .card-extra .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            padding: 8px 0;
+        }
+
+        .card-extra .row:last-child {
+            border-bottom: 0;
+        }
+
+        .extra-cta {
+            margin-top: 8px;
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 0;
+            cursor: pointer;
+        }
+
+        /* reveal on hover/focus of wrapper */
+        .game-card-medium__wrapper:hover .card-extra,
+        .game-card-medium__wrapper:focus-within .card-extra,
+        .game-card-medium__wrapper.is-expanded .card-extra {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* card lift */
+        .game-card-medium__wrapper:hover,
+        .game-card-medium__wrapper:focus-within {
+            transform: translateY(-8px);
+            z-index: 60;
+        }
+
+        /* keyframes slide uses CSS var --steps set by JS */
+        @keyframes slide {
+            0% {
+                transform: translateX(0%);
+            }
+
+            90% {
+                transform: translateX(calc(var(--steps, 0) * -100%));
+            }
+
+            100% {
+                transform: translateX(calc(var(--steps, 0) * -100%));
+            }
+        }
+
+        /* small responsive tweak */
+        @media (max-width: 360px) {
+            :root {
+                --card-w: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="game-card-medium">
+        <div class="game-card-medium__wrapper" role="button" tabindex="0" aria-label="Game card">
+            <div class="game-card-medium__media carousel" aria-hidden="false">
+                <div class="carousel-track" aria-hidden="true">
+                    <img src="https://media.rawg.io/media/resize/640/-/games/5f8/5f8b6e0bfdf4efd5e2b9231df8721de0.jpg"
+                        alt="screenshot 1">
+                    <img src="https://media.rawg.io/media/crop/600/400/games/fb5/fb5e0fdb1f6bb0e8b5da5d08bb83a5fc.jpg"
+                        alt="screenshot 2">
+                    <img src="https://media.rawg.io/media/screenshots/0b1/0b1d3a1f2f0c4d1e9a3a9a2f4b8efd9c.jpg"
+                        alt="screenshot 3">
+                    <img src="https://media.rawg.io/media/screenshots/1a2/1a2d3aexample.jpg" alt="screenshot 4">
+                </div>
+
+                <div class="platforms-overlay" aria-hidden="true">
+                    <div class="plat" title="PC">PC</div>
+                    <div class="plat" title="PlayStation">PS</div>
+                    <div class="plat" title="Xbox">XB</div>
+                </div>
+
+                <div class="carousel-indicators" aria-hidden="true"></div>
+            </div>
+
+            <div class="game-card-medium__info">
+                <div class="heading heading_4">
+                    <a class="game-card-medium__info__name" href="/games/the-alters">
+                        The Alters
+                        <span class="rating" title="Exceptional">EX</span>
+                    </a>
+                </div>
+
+                <div class="game-card-buttons">
+                    <button class="game-card-button" type="button" aria-label="add">+ 173</button>
+                    <button class="game-card-button" type="button" aria-label="wishlist">🎁</button>
+                    <button class="game-card-button" type="button" aria-label="more">⋯</button>
+                </div>
+            </div>
+
+            <div class="card-extra" aria-hidden="true">
+                <div class="row">
+                    <div class="label">Release date:</div>
+                    <div class="value">Jun 13, 2025</div>
+                </div>
+                <div class="row">
+                    <div class="label">Genres:</div>
+                    <div class="value"><a href="#" style="color:#9ecbff;text-decoration:underline;">Adventure</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="label">Chart:</div>
+                    <div class="value">#12 Top 2025</div>
+                </div>
+                <button class="extra-cta" aria-label="show-more">Show more like this →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhance carousel behavior: start automatic image scroll on hover/focus and show indicators.
+        document.querySelectorAll('.game-card-medium__wrapper').forEach(card => {
+            const wrapper = card;
+            const track = wrapper.querySelector('.carousel-track');
+            const imgs = Array.from(track.querySelectorAll('img'));
+            const indicatorsContainer = wrapper.querySelector('.carousel-indicators');
+            if (!track || imgs.length === 0) return;
+
+            // build indicators
+            imgs.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (i === 0 ? ' active' : '');
+                indicatorsContainer.appendChild(dot);
+            });
+            const dots = Array.from(indicatorsContainer.children);
+
+            // set CSS vars for slide animation
+            const steps = Math.max(0, imgs.length - 1);
+            track.style.setProperty('--steps', steps);
+
+            // duration per whole animation (adjust to taste)
+            const totalDuration = Math.max(4, imgs.length * 3); // seconds
+            track.style.animationDuration = totalDuration + 's';
+
+            let idx = 0,
+                indicatorTimer = null;
+
+            function setActive(i) {
+                dots.forEach((d, n) => d.classList.toggle('active', n === i));
+            }
+
+            function start() {
+                wrapper.classList.add('is-playing');
+                // restart CSS animation reliably
+                track.style.animation = 'none';
+                // force reflow
+                // eslint-disable-next-line no-unused-expressions
+                track.offsetHeight;
+                track.style.animation = null;
+                track.style.animationPlayState = 'running';
+                // sync indicators with slides
+                const perSlide = (totalDuration / Math.max(1, imgs.length));
+                clearInterval(indicatorTimer);
+                idx = 0;
+                setActive(idx);
+                indicatorTimer = setInterval(() => {
+                    idx = (idx + 1) % imgs.length;
+                    setActive(idx);
+                }, perSlide * 1000);
+                // visually expand extra panel
+                wrapper.classList.add('is-expanded');
+                wrapper.style.zIndex = 60;
+            }
+
+            function stop() {
+                wrapper.classList.remove('is-playing');
+                wrapper.classList.remove('is-expanded');
+                track.style.animationPlayState = 'paused';
+                clearInterval(indicatorTimer);
+                idx = 0;
+                setActive(idx);
+                wrapper.style.zIndex = '';
+            }
+
+            wrapper.addEventListener('mouseenter', start);
+            wrapper.addEventListener('mouseleave', stop);
+
+            // keyboard accessibility: start when focused, stop when focus leaves
+            wrapper.addEventListener('focusin', start);
+            wrapper.addEventListener('focusout', stop);
+
+            // small robustness: pause when tab hidden
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) stop();
+            });
+        });
+    </script>
+</body>
+
+</html>

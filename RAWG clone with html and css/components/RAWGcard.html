@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>RAWG-style Card</title>
+    <link rel="stylesheet" href="RAWGcardstyle.css">
+</head>
+
+<body>
+    <article class="rawg-card" aria-labelledby="game-ttl-1">
+        <div class="rawg-card__media"
+            style="background-image:url('https://media.rawg.io/media/crop/600/400/games/fb5/fb5e0fdb1f6bb0e8b5da5d08bb83a5fc.jpg')">
+
+            <video class="rawg-card__video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+                <source src="/RAWG clone with html and css/rawg clone video.mp4" type="video/mp4"> 
+            </video>
+
+            <div class="rawg-card__play" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="display:block">
+                    <path d="M8 5v14l11-7L8 5z" fill="white" />
+                </svg>
+                <!-- Trailer -->
+            </div>
+
+            <div class="rawg-card__platforms" aria-hidden="true">
+                <div class="plat" title="PC">PC</div>
+                <div class="plat" title="PlayStation">PS</div>
+                <div class="plat" title="Xbox">XB</div>
+            </div>
+        </div>
+
+        <div class="rawg-card__info">
+            <h3 id="game-ttl-1" class="rawg-card__title">
+                <a href="/games/vampire-the-masquerade-bloodlines-2">Vampire: The Masquerade – Bloodlines 2</a>
+                <span class="rating-badge" title="Exceptional">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="#fff" opacity="0.06" />
+                    </svg>
+                    EX
+                </span>
+            </h3>
+
+            <div class="rawg-card__meta">
+                <div class="rawg-card__about">
+                    <span class="tag">RPG</span>
+                    <span class="tag">Open World</span>
+                    <span class="tag">2024</span>
+                </div>
+
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <button class="btn-ghost" aria-label="add to list">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <path d="M11 11v6h2v-6h6v-2h-6V3h-2v6H5v2h6z" fill="currentColor" />
+                        </svg>
+                        1,012
+                    </button>
+
+                    <button class="btn-ghost" aria-label="wishlist">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 21s-7-4.35-9-6.5A6.01 6.01 0 015 4.5C6.4 3 8.5 3 10 4.5L12 6.5l2-2c1.5-1.5 3.6-1.5 5 0a6.01 6.01 0 012 10C19 16.65 12 21 12 21z" fill="currentColor" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="rawg-card__actions">
+                <a class="btn-ghost" href="/games/vampire-the-masquerade-bloodlines-2">View</a>
+                <button class="btn-ghost" aria-label="more">More</button>
+            </div>
+        </div>
+
+        <div class="rawg-card__extra" aria-hidden="true">
+            <div class="extra-row">
+                <div class="label">Release date:</div>
+                <div class="value">Oct 21, 2025</div>
+            </div>
+
+            <div class="extra-row">
+                <div class="label">Genres:</div>
+                <div class="value">Action, RPG</div>
+            </div>
+
+            <div class="extra-row">
+                <div class="label">Chart:</div>
+                <div class="value">#1 Top 2025</div>
+            </div>
+
+            <button class="extra-cta" aria-label="show-more">Show more like this →</button>
+        </div>
+    </article>
+
+    <script>
+        // ensure video restarts from beginning when hover begins
+        document.querySelectorAll('.rawg-card').forEach(card => {
+            const video = card.querySelector('video');
+            card.addEventListener('mouseenter', () => {
+                // visual stacking handled by CSS but ensure highest z on JS hover too
+                card.style.zIndex = 60;
+                if (video) {
+                    try {
+                        video.currentTime = 0; // reset to start
+                    } catch (e) { /* some browsers may block setting currentTime until loaded */ }
+                    // try to play (muted autoplay should be allowed)
+                    video.play().catch(() => { /* ignore play errors */ });
+                }
+            });
+            card.addEventListener('mouseleave', () => {
+                if (video) {
+                    try {
+                        video.pause();
+                        video.currentTime = 0;
+                    } catch (e) { /* ignore */ }
+                }
+                card.style.zIndex = '';
+            });
+            // keyboard accessibility: restart on focus
+            card.addEventListener('focusin', () => {
+                if (video) {
+                    try { video.currentTime = 0; } catch (e) {}
+                    video.play().catch(()=>{});
+                }
+            });
+            card.addEventListener('focusout', () => {
+                if (video) {
+                    try { video.pause(); video.currentTime = 0; } catch(e){}
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
